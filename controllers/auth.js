@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const { isPassportNumber } = require('validator');
 
 const saltRounds = 12;
 
@@ -35,6 +36,33 @@ router.post('/sign-up', async (req, res) => {
         const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
         res.status(201).json({ token });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/sign-in', async (req, res)  => {
+    try {
+        const user = await User.findOne({ username: req.body.username });
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials.' });
+        };
+
+        const isPassportCorrect = bcrypt.compareSync(req.body.password, user.hashedPassword);
+        if (!isPassportCorrect){
+            return res.status(401).json({ error: 'Invalid credentials.' });
+        };
+
+        const payload = { 
+            username: user.username,
+            _id: user._id,
+            displayName: user.displayName,
+            email: user.email
+        };
+
+        const token = jwt.sign({ payload }, process.env.JWT_SECRET);
+        
+        res.status(200).json({ token });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

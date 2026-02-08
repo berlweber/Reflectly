@@ -24,9 +24,9 @@ app.use(logger('dev'));
 // routes here
 app.use('/auth', authRouter);
 
-// app.get('/', (req, res) => {
-//     res.send('this does work!');
-// })
+app.get('/', (req, res) => {
+    res.send('this does work!');
+})
 
 app.listen(port, () => {
     console.log(`The express app is ready on port: ${port}`);
