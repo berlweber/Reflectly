@@ -83,4 +83,24 @@ router.put('/:id', verifyToken, async (req, res) => {
     }
 });
 
+// DELETE route
+router.delete('/:diaryEntryId', verifyToken, async (req, res) => {
+    try {
+        const diaryEntry = await DiaryEntry.findById(req.params.id);
+
+        if (!diaryEntry) {
+            return res.status(404).json({ message: 'Entry not found'})
+        }
+
+        if (diaryEntry.owner.equals(req.user._id)) {
+            await diaryEntry.deleteOne();
+            // res.send???
+        } else {
+            return res.status(403).json({ message: 'You do not have authorisation to delete this'});
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message }); 
+    }
+});
+
 module.exports = router
