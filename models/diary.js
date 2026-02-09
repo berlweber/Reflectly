@@ -4,8 +4,13 @@ const diarySchema = new mongoose.Schema({
     title: {
         type: String,
     },
+    owner: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User', 
+            required: true 
+        }, 
     moodList: [{
-        moods: {
+        mood: {
             type: String,
             enum: ['happy', 'sad', 'bored'], // <-- not full, just for testing purpose
             required: true

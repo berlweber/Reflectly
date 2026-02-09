@@ -11,7 +11,7 @@ const verifyToken = require('../middleware/verify-token')
 
 router.post('/:diaryEntryId/comments', verifyToken, async (req, res) => {
     try {
-        req.body.author = req.user._id; 
+        req.body.owner = req.user._id; 
         const comment = new Comment ({
             comments: req.body.comments,
             diaryEntry: req.params.diaryEntryId, 

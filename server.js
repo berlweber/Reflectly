@@ -24,7 +24,7 @@ app.use(logger('dev'));
 
 // routes here
 app.use('/auth', authRouter);
-app.use('/', diaryEntriesRouter)
+app.use('/diaryEntry', diaryEntriesRouter)
 
 app.get('/', (req, res) => {
     res.send('this does work!');

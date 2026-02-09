@@ -1,12 +1,14 @@
 const express = require('express')
 const router = express.Router()
-const verifyToken = require('../middleware/`??????`') // <--- Whats the route
+const verifyToken = require('../middleware/verify-token') 
 const DiaryEntry = require('../models/diary.js')
+const Comment = require('../models/comment.js')
 
 //CREATE
 
 router.post('/', verifyToken, async (req, res) => {
     try {
+    req.body.owner = req.user._id; 
     const diaryEntry = await DiaryEntry.create(req.body)
     res.status(201).json(diaryEntry)
  } catch (error) {  
@@ -18,9 +20,11 @@ router.post('/', verifyToken, async (req, res) => {
 
 router.get('/:diaryEntryId', verifyToken, async (req, res) => {
     try {
-        const diaryEntry = await DiaryEntry.findById(req.params.diaryEntryId)
-        const comments = await Comment.find({ diaryEntry: req.params.diaryEntryId})
-        if (!private || diaryEntry.author.equals(req.user._id)) {
+        const diaryEntry = await DiaryEntry.findById(req.params.diaryEntryId);
+        const comments = await Comment.find({ diaryEntry: req.params.diaryEntryId })
+        console.log('diary entry', diaryEntry);
+
+        if (diaryEntry.isEntryPublic || diaryEntry.author.equals(req.user._id)) {
             return res.status(200).json(diaryEntry)
         } else {
             return res.status(403).send('You are not authorized')
@@ -28,6 +32,7 @@ router.get('/:diaryEntryId', verifyToken, async (req, res) => {
     } catch (error) {
         res.status(500).json(error)
     }
+
 })
 
 router.get('/', async (req, res) => {
@@ -48,14 +53,17 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.put('/diaryEntry/:id', verifyToken, async (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
     try {
         const diaryEntry = await DiaryEntry.findById(req.params.id); 
+     
+
         if (!diaryEntry) {
             return res.status(404).json({ message: 'Entry not found'})
+      
         }
-
-        if (diaryEntry.owner.toString() !== req.user._id.toString()) {
+     
+        if (diaryEntry.owner.equals(req.user._id)) {
             return res.status(403).json({ message: 'You do not have authorisation to update this'})
         }
 
