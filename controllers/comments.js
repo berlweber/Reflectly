@@ -39,6 +39,32 @@ router.get('/:diaryEntryId/comments', async (req, res) => {
     }
 })
 
+// update a comment
+// PUT
+// path is diaryEntry/:diaryEntryId/comments/:commentId
+
+router.put('/:diaryId/comments/:commentId', verifyToken, async (req, res) => {
+    try {
+        const commment = await Comment.findbyId(req.params.commentId); 
+
+        if (!comment.author.equals(req.user._id)) {
+            return res.status(403).send('You do not have authorisation'); 
+        }
+
+        const updatedComment = await Comment.findbyIdAndUpdate(
+            req.params.commentId, 
+            req.body, 
+            { new: true }
+        ); 
+
+        updatedComment._doc.author = req.user; 
+
+        res.status(200).json(updatedComment); 
+    } catch (err) {
+        res.status(500).json({ err: err.message }); 
+    }
+})
+
 // delete a comment 
 // DELETE 
 // path is diaryEntry/:diaryEntryId/comments/:commentId
@@ -64,3 +90,4 @@ router.delete('/:diaryId/comments/:commentId', verifyToken, async (req, res) => 
         res.status(500).json({ err: err.message })
     }
 })
+
