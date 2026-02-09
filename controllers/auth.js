@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-const { isPassportNumber } = require('validator');
+// const { isPassportNumber } = require('validator');
 
 const saltRounds = 12;
 
@@ -48,8 +48,8 @@ router.post('/sign-in', async (req, res)  => {
             return res.status(401).json({ error: 'Invalid credentials.' });
         };
 
-        const isPassportCorrect = bcrypt.compareSync(req.body.password, user.hashedPassword);
-        if (!isPassportCorrect){
+        const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.hashedPassword);
+        if (!isPasswordCorrect){
             return res.status(401).json({ error: 'Invalid credentials.' });
         };
 
