@@ -8,6 +8,7 @@ const logger = require('morgan');
 
 // Routes
 const authRouter = require('./controllers/auth');
+const diaryEntriesRouter = require ('./controllers/diaryentries')
 
 const port = process.env.port ? process.env.port : 3000;
 
@@ -23,6 +24,7 @@ app.use(logger('dev'));
 
 // routes here
 app.use('/auth', authRouter);
+app.use('/', diaryEntriesRouter)
 
 app.get('/', (req, res) => {
     res.send('this does work!');
