@@ -1,6 +1,7 @@
 const express = require('express'); 
 const router = express.Router(); 
 const Comment = require('../models/comment'); 
+const jwt = require('jsonwebtoken');
 
 // create a new comment
 // method is POST
@@ -24,20 +25,6 @@ router.post('/:diaryEntryId/comments', verifyToken, async (req, res) => {
     }
 });
 
-// GET all comments for an entry 
-// Path is /:diaryEntryId/comments
-
-router.get('/:diaryEntryId/comments', async (req, res) => {
-    try {
-        const comments = await Comment.find({ diaryEntry: req.params.diaryEntryId })
-        .populate('owner', 'username')
-        .sort({ createdAt: -1 }); 
-
-        res.status(200).json(comments); 
-    } catch (err) {
-        res.status(500).json({ err: err.message })
-    }
-})
 
 // update a comment
 // PUT
@@ -74,7 +61,7 @@ router.delete('/:diaryEntryId/comments/:commentId', verifyToken, async (req, res
         const comment = await Comment.findById(req.params.commentId); 
 
         if (!comment) {
-            return res.status(404).json({ message: 'comment nout found '}); 
+            return res.status(404).json({ message: 'comment not found '}); 
         }
 
         if (comment.owner.toString() !== req.user._id) {
@@ -90,3 +77,5 @@ router.delete('/:diaryEntryId/comments/:commentId', verifyToken, async (req, res
         res.status(500).json({ err: err.message })
     }
 })
+
+module.exports = router; 

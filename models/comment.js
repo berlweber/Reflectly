@@ -5,10 +5,10 @@ const commentSchema = new mongoose.Schema({
         type: String, 
         required: true
     }, 
-    upVote: [{
-        type: mongoose.Schema.Types.ObjectId, 
+    upVote: {
+        type: [mongoose.Schema.Types.ObjectId], 
         ref: 'User', 
-    }], 
+    }, 
     diaryEntry: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'DiaryEntry', 
