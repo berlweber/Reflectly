@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 
 const saltRounds = 12;
 
+// need to resolve scenario with displayName (if two users both have undefined)
 router.post('/sign-up', async (req, res) => {
     try {
         const userInDatabase = await User.findOne({ username: req.body.username });
