@@ -15,7 +15,7 @@ router.post('/sign-up', async (req, res) => {
         }
 
         const displayNameInDatabase = await User.findOne({ displayName: req.body.displayName });
-        if (displayNameInDatabase) {
+        if (displayNameInDatabase.displayName) {
             return res.status(409).json({error: 'Displayname already taken.'});
         }
 
