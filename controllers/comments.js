@@ -1,6 +1,6 @@
 const express = require('express'); 
 const router = express.Router(); 
-const Commment = require('../models/comment'); 
+const Comment = require('../models/comment'); 
 
 // create a new comment
 // method is POST
@@ -41,17 +41,17 @@ router.get('/:diaryEntryId/comments', async (req, res) => {
 
 // update a comment
 // PUT
-// path is diaryEntry/:diaryEntryId/comments/:commentId
+// path is /:diaryEntryId/comments/:commentId
 
-router.put('/:diaryId/comments/:commentId', verifyToken, async (req, res) => {
+router.put('/:diaryEntryId/comments/:commentId', verifyToken, async (req, res) => {
     try {
-        const commment = await Comment.findbyId(req.params.commentId); 
+        const comment = await Comment.findById(req.params.commentId); 
 
-        if (!comment.author.equals(req.user._id)) {
+        if (!comment.owner.equals(req.user._id)) {
             return res.status(403).send('You do not have authorisation'); 
         }
 
-        const updatedComment = await Comment.findbyIdAndUpdate(
+        const updatedComment = await Comment.findByIdAndUpdate(
             req.params.commentId, 
             req.body, 
             { new: true }
@@ -69,9 +69,9 @@ router.put('/:diaryId/comments/:commentId', verifyToken, async (req, res) => {
 // DELETE 
 // path is diaryEntry/:diaryEntryId/comments/:commentId
 
-router.delete('/:diaryId/comments/:commentId', verifyToken, async (req, res) => {
+router.delete('/:diaryEntryId/comments/:commentId', verifyToken, async (req, res) => {
     try { 
-        const comment = await Comment.findbyId(req.params.commentId); 
+        const comment = await Comment.findById(req.params.commentId); 
 
         if (!comment) {
             return res.status(404).json({ message: 'comment nout found '}); 
