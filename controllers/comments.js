@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router(); 
 const Comment = require('../models/comment'); 
 const jwt = require('jsonwebtoken');
+const verifyToken = require('../middleware/verify-token')
 
 // create a new comment
 // method is POST
