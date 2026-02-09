@@ -93,8 +93,8 @@ router.delete('/:diaryEntryId', verifyToken, async (req, res) => {
         }
 
         if (diaryEntry.owner.equals(req.user._id)) {
-            await diaryEntry.deleteOne();
-            // res.send???
+            const deletedDiatyEntry = await diaryEntry.deleteOne();
+            res.status(200).jaon(deletedDiatyEntry);
         } else {
             return res.status(403).json({ message: 'You do not have authorisation to delete this'});
         }
