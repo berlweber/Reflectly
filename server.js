@@ -8,7 +8,8 @@ const logger = require('morgan');
 
 // Routes
 const authRouter = require('./controllers/auth');
-const diaryEntriesRouter = require ('./controllers/diaryentries')
+const diaryEntriesRouter = require ('./controllers/diaryentries');
+const commentsRouter = require('./controllers/comments');
 
 const port = process.env.port ? process.env.port : 3000;
 

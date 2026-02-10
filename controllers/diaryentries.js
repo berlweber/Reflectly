@@ -21,13 +21,16 @@ router.post('/', verifyToken, async (req, res) => {
 router.get('/:diaryEntryId', verifyToken, async (req, res) => {
     try {
         const diaryEntry = await DiaryEntry.findById(req.params.diaryEntryId);
-        const comments = await Comment.find({ diaryEntry: req.params.diaryEntryId })
-        console.log('diary entry', diaryEntry);
+        const comments = await Comment.find({ diaryEntry: req.params.diaryEntryId });
 
         if (diaryEntry.isEntryPublic || diaryEntry.author.equals(req.user._id)) {
-            return res.status(200).json(diaryEntry)
+            const fullDiaryEntry = {
+                diaryEntry: diaryEntry,
+                comments: comments
+            };
+            return res.status(200).json(fullDiaryEntry);
         } else {
-            return res.status(403).send('You are not authorized')
+            return res.status(403).json({ error: 'You are not authorized' });
         }
     } catch (error) {
         res.status(500).json(error)
@@ -40,8 +43,8 @@ router.get('/', async (req, res) => {
         const diaryEntries = await DiaryEntry.find({})
 
         const filteredEntries = diaryEntries.filter((diaryEntry) => {
-            if (diaryEntry.private) {
-                return req.user && diaryEntry.owner.toString() === req.user._id.toString(); 
+            if (diaryEntry.isEntryPublic || diaryEntry.owner.toString() === req.user._id.toString()) {
+                return diaryEntry;
             }
             return true; 
     }); 
@@ -93,8 +96,8 @@ router.delete('/:diaryEntryId', verifyToken, async (req, res) => {
         }
 
         if (diaryEntry.owner.equals(req.user._id)) {
-            const deletedDiatyEntry = await diaryEntry.deleteOne();
-            res.status(200).jaon(deletedDiatyEntry);
+            const deletedDiartyEntry = await diaryEntry.deleteOne();
+            res.status(200).json({ deletedDiartyEntry });
         } else {
             return res.status(403).json({ message: 'You do not have authorisation to delete this'});
         }

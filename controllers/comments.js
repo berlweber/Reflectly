@@ -13,7 +13,7 @@ router.post('/:diaryEntryId/comments', verifyToken, async (req, res) => {
     try {
         req.body.owner = req.user._id; 
         const comment = new Comment ({
-            comments: req.body.comments,
+            comment: req.body.comment,
             diaryEntry: req.params.diaryEntryId, 
             owner: req.user._id
         }); 
@@ -36,7 +36,7 @@ router.put('/:diaryEntryId/comments/:commentId', verifyToken, async (req, res) =
         const comment = await Comment.findById(req.params.commentId); 
 
         if (!comment.owner.equals(req.user._id)) {
-            return res.status(403).send('You do not have authorisation'); 
+            return res.status(403).json({ error: 'You do not have authorisation' }); 
         }
 
         const updatedComment = await Comment.findByIdAndUpdate(
