@@ -24,7 +24,7 @@ router.get('/:diaryEntryId', verifyToken, async (req, res) => {
         const diaryEntry = await DiaryEntry.findById(req.params.diaryEntryId);
         const comments = await Comment.find({ diaryEntry: req.params.diaryEntryId });
 
-        if (diaryEntry.isEntryPublic || diaryEntry.author.equals(req.user._id)) {
+        if (diaryEntry.isEntryPublic || diaryEntry.owner.equals(req.user._id)) {
             const fullDiaryEntry = {
                 diaryEntry: diaryEntry,
                 comments: comments
