@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/verify-token') 
 const DiaryEntry = require('../models/diary.js')
 const Comment = require('../models/comment.js')
@@ -41,11 +42,24 @@ router.get('/:diaryEntryId', verifyToken, async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const diaryEntries = await DiaryEntry.find({})
+        if (req.headers.authorization) {
+            console.log('statement works', diaryEntries); 
+            try {
+                const token = req.headers.authorization.split(' ')[1];
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            
+                req.user = decoded.payload;
+                console.log(req.user); 
+            } catch (error) {
+                res.status(401).json({ error: 'Invalid token.' });
+            }
+        }
 
         const filteredEntries = diaryEntries.filter((diaryEntry) => {
             if (diaryEntry.isEntryPublic || diaryEntry.owner.toString() === req.user._id.toString()) {
                 return diaryEntry;
             }
+
             return true; 
     }); 
 
