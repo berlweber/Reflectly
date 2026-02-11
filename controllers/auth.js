@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-// const { isPassportNumber } = require('validator');
+
 
 const saltRounds = 12;
 
@@ -16,7 +16,7 @@ router.post('/sign-up', async (req, res) => {
         }
 
         const displayNameInDatabase = await User.findOne({ displayName: req.body.displayName });
-        if (displayNameInDatabase.displayName) {
+        if (displayNameInDatabase?.displayName) {
             return res.status(409).json({error: 'Displayname already taken.'});
         }
 

@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
             validator: validator.isEmail,
             message: '{VALUE} is not a valid email',
             isAsync: false,
-        }, //still need to check if validation is working and if package installation needed.
+        },
     },
     hashedPassword: {
         type: String,
