@@ -59,7 +59,6 @@ router.get('/', async (req, res) => {
 
         const filteredEntries = diaryEntries.filter((diaryEntry) => {
             if (diaryEntry.isEntryPublic || diaryEntry.owner.toString() === req.user?._id.toString()) {
-                console.log('filtered entrys', diaryEntry.owner?.toString(), req.user?._id.toString())
                 return diaryEntry;
             }
     }); 
