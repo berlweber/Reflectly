@@ -41,7 +41,9 @@ router.get('/:diaryEntryId', verifyToken, async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const diaryEntries = await DiaryEntry.find({})
+        console.log('entered the diary entries controller'); 
+        const diaryEntries = await DiaryEntry.find()
+        console.log('fetched diary entries'); 
         if (req.headers.authorization) {
             console.log('statement works', diaryEntries); 
             try {
@@ -56,7 +58,7 @@ router.get('/', async (req, res) => {
         }
 
         const filteredEntries = diaryEntries.filter((diaryEntry) => {
-            if (diaryEntry.isEntryPublic || diaryEntry.owner.toString() === req.user._id.toString()) {
+            if (diaryEntry.isEntryPublic || diaryEntry.owner.toString() === req.user?._id.toString()) {
                 return diaryEntry;
             }
 
