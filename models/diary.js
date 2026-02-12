@@ -9,19 +9,17 @@ const diarySchema = new mongoose.Schema({
             ref: 'User', 
             required: true 
         }, 
-    moodList: [{
-        mood: {
-            type: String,
-            enum: ['happy', 'sad', 'bored'], // <-- not full, just for testing purpose
-            required: true
-          },  
-        moodLvl: { 
-            type: Number,
-            min: [1],
-            max: [10],
-            required: true
-        }
-    }],
+    mood: {
+        type: String,
+        enum: ['happy', 'sad', 'bored', 'afraid', 'excited', 'angry', 'surprised', 'calm'], 
+        required: true
+    },  
+    moodLvl: { 
+        type: Number,
+        min: [1],
+        max: [10],
+        required: true
+    },
     reflection: {
         type: String
     },

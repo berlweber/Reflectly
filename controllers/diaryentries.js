@@ -10,7 +10,7 @@ const Comment = require('../models/comment.js')
 router.post('/', verifyToken, async (req, res) => {
     try {
     req.body.owner = req.user._id; 
-    const diaryEntry = await DiaryEntry.create(req.body)
+    const diaryEntry = await DiaryEntry.create(req.body);
     res.status(201).json(diaryEntry)
  } catch (error) {  
     res.status(500).json(error)
@@ -40,10 +40,8 @@ router.get('/:diaryEntryId', verifyToken, async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    try {
-        console.log('entered the diary entries controller'); 
-        const diaryEntries = await DiaryEntry.find()
-        console.log('fetched diary entries'); 
+    try { 
+        const diaryEntries = await DiaryEntry.find() 
         if (req.headers.authorization) {
             console.log('statement works', diaryEntries); 
             try {
@@ -79,8 +77,8 @@ router.put('/:id', verifyToken, async (req, res) => {
             return res.status(404).json({ message: 'Entry not found'})
       
         }
-     
-        if (diaryEntry.owner.equals(req.user._id)) {
+        console.log(diaryEntry.owner, req.user._id)
+        if (!diaryEntry.owner.equals(req.user._id)) {
             return res.status(403).json({ message: 'You do not have authorisation to update this'})
         }
 
@@ -101,7 +99,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 });
 
 // DELETE route
-router.delete('/:diaryEntryId', verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
     try {
         const diaryEntry = await DiaryEntry.findById(req.params.id);
 
