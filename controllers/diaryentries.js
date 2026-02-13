@@ -118,4 +118,21 @@ router.delete('/:id', verifyToken, async (req, res) => {
     }
 });
 
+router.post('/:diaryEntryId/comments', verifyToken, async (req, res) => {
+    try {
+        req.body.owner = req.user._id; 
+        const comment = new Comment ({
+            diary: req.body.comment,
+            diaryEntry: req.params.diaryEntryId, 
+            owner: req.user._id
+        }); 
+
+        const savedComment = await comment.save(); 
+        await savedComment.populate('owner', 'username'); 
+        res.status(201).json(savedComment); 
+    } catch (err) {
+        res.status(500).json({ err: err.message })
+    }
+});
+
 module.exports = router
