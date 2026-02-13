@@ -1,5 +1,16 @@
 const mongoose = require('mongoose')
 
+const commentSchema = new mongoose.Schema(
+  {
+    comment: {
+      type: String,
+      required: true
+    },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  },
+  { timestamps: true }
+);
+
 const diarySchema = new mongoose.Schema({
     title: {
         type: String,
@@ -35,6 +46,8 @@ const diarySchema = new mongoose.Schema({
         type: Boolean, 
         required: true
     },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    comments: [commentSchema],
 },
 { timestamps: true });
 
