@@ -11,7 +11,7 @@ const authRouter = require('./controllers/auth');
 const diaryEntriesRouter = require ('./controllers/diaryentries');
 const commentsRouter = require('./controllers/comments');
 
-const port = process.env.port ? process.env.port : 3000;
+const port = process.env.PORT ? process.env.PORT : 3000;
 
 mongoose.connect(process.env.MONGODB_URI);
 
