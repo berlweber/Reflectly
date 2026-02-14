@@ -43,13 +43,11 @@ router.get('/', async (req, res) => {
     try { 
         const diaryEntries = await DiaryEntry.find() 
         if (req.headers.authorization) {
-            console.log('statement works', diaryEntries); 
             try {
                 const token = req.headers.authorization.split(' ')[1];
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
                 req.user = decoded.payload;
-                console.log(req.user); 
             } catch (error) {
                 res.status(401).json({ error: 'Invalid token.' });
             }
@@ -72,12 +70,9 @@ router.put('/:id', verifyToken, async (req, res) => {
     try {
         const diaryEntry = await DiaryEntry.findById(req.params.id); 
      
-
         if (!diaryEntry) {
             return res.status(404).json({ message: 'Entry not found'})
-      
         }
-        console.log(diaryEntry.owner, req.user._id)
         if (!diaryEntry.owner.equals(req.user._id)) {
             return res.status(403).json({ message: 'You do not have authorisation to update this'})
         }
